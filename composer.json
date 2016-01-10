@@ -28,7 +28,7 @@
         "phpoffice/phpexcel": "*",
         "yiisoft/yii2-imagine": "*",
         "kartik-v/yii2-widgets": "*",
-        "kartik-v/yii2-dynagrid": "*"
+        "kartik-v/yii2-dynagrid": "@dev"
     },
     "minimum-stability": "dev",
     "autoload": {
