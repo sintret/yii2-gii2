@@ -10,7 +10,7 @@ $urlParams = $generator->generateUrlParams();
 $nameAttribute = $generator->getNameAttribute();
 $cl = $generator->modelClass;
 $explode = explode("\\", $cl);
-
+$date = strtolower(date('Y-M-d-H:i:s'));
 echo "<?php\n";
 ?>
 
@@ -149,10 +149,34 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
                     'dataProvider' => $dataProvider,
                     'filterModel' => $searchModel,
                     'showPageSummary' => true,
-                    'floatHeader' => true,
                     'pjax' => true,
                     'panel' => $panels,
                     'toolbar' => $toolbars,
+                    'export' => [
+                        'fontAwesome' => true,
+                        'showConfirmAlert' => false,
+                    //'target' => GridView::TARGET_SELF
+                    ],
+                    'exportConfig' => [
+                        'html' => [
+                            'filename' => '<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-'.$date,
+                        ],
+                        'csv' => [
+                            'filename' => '<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-'.$date,
+                        ],
+                        'pdf' => [
+                            'filename' => '<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-'.$date,
+                        ],
+                        'xls' => [
+                            'filename' => '<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-'.$date,
+                        ],
+                        'txt' => [
+                            'filename' => '<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-'.$date,
+                        ],
+                        'json' => [
+                            'filename' => '<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-'.$date,
+                        ]
+                    ],
                 ],
                 'options' => ['id' => '<?= StringHelper::basename($generator->modelClass) ?>'.Yii::$app->user->identity->id] // a unique identifier is important
     ]);
