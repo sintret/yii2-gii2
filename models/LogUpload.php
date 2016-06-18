@@ -21,10 +21,13 @@ use Yii;
  */
 class LogUpload extends \yii\db\ActiveRecord {
 
+
     const TYPE_INSERT = 1;
     const TYPE_UPDATE = 2;
     const TYPE_DELETE = 3;
 
+    public $type_parsing;
+    public static $typies_parsing = [1 => 'New Record', 'Update Existing data'];
     public static $type = [1 => 'Insert', 2 => 'Update', 3 => 'Delete'];
     // user model for relation with table user
     public $userModel;
