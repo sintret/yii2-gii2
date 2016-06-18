@@ -258,18 +258,22 @@ throw new NotFoundHttpException('The requested page does not exist.');
 }
 }
 
-public function actionSample() {
+public function actionSample(($id = NULL) {
 
-//$objPHPExcel = new \PHPExcel();
 $template = Util::templateExcel();
 $model = new <?= $modelClass ?>;
 $date = date('YmdHis');
 $name = $date.'<?= $modelClass ?>';
-//$attributes = $model->attributeLabels();
 $models = <?= $modelClass ?>::find()->all();
 $excelChar = Util::excelChar();
 $not = Util::excelNot();
-
+if (empty($id)) {
+            $not = array_merge($not, ['id']);
+            $filename = date("YmdHis") . '<?= $modelClass ?>_with_new_method.xls';
+        } else {
+            $filename = date("YmdHis") . '<?= $modelClass ?>_with_update_method.xls';
+        }
+        
 foreach ($model->attributeLabels() as $k=>$v){
 if(!in_array($k, $not)){
 $attributes[$k]=$v;
@@ -279,7 +283,7 @@ $attributes[$k]=$v;
 $objReader = \PHPExcel_IOFactory::createReader('Excel5');
 $objPHPExcel = $objReader->load(Yii::getAlias($template));
 
-return $this->render('sample', ['models' => $models,'attributes'=>$attributes,'excelChar'=>$excelChar,'not'=>$not,'name'=>$name,'objPHPExcel' => $objPHPExcel]);
+return $this->render('sample', ['filename' => $filename,'models' => $models,'attributes'=>$attributes,'excelChar'=>$excelChar,'not'=>$not,'name'=>$name,'objPHPExcel' => $objPHPExcel]);
 }
 
 public function actionParsing() {
@@ -294,7 +298,13 @@ $date = date('Ymdhis') . Yii::$app->user->identity->id;
 
 if (Yii::$app->request->isPost) {
 $model->fileori = UploadedFile::getInstance($model, 'fileori');
+$model->type = $_POST['LogUpload']['type'];
 
+            if ($model->type == 1) {
+                $fName = '_<?= $modelClass ?>_with_new_method';
+            } else {
+                $fName = '_<?= $modelClass ?>_with_update_method';
+            }
 if ($model->validate()) {
 $fileOri = Yii::getAlias(LogUpload::$imagePath) . $model->fileori->baseName . '.' . $model->fileori->extension;
 $filename = Yii::getAlias(LogUpload::$imagePath) . $date . '.' . $model->fileori->extension;
@@ -339,7 +349,7 @@ $notification->params = \yii\helpers\Json::encode(['model' => '<?= $modelClass ?
 $notification->save();
 }
 }
-$route = '<?= strtolower($modelClass) ?>/parsing-log';
+$route = '<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>/parsing-log';
 
 return $this->render('parsing', ['model' => $model,'log'=>$log,'route'=>$route]);
 }
