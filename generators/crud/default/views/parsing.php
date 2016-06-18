@@ -35,7 +35,7 @@ $logId = Yii::$app->session->get($log);
 <div class="sintret-update">
 
     <div class="page-header">
-        <h1>Parsing Excel <?= $model->tableName() ?></h1>
+        <h1><?= %this->title ?></h1>
     </div>
 
 
@@ -52,6 +52,10 @@ $logId = Yii::$app->session->get($log);
 
             <div class="row">
                 <div class="col-md-10">
+                    <?php echo "<?php\n";?> 
+                    echo $form->field($model, 'type')->dropDownList(\app\models\LogUpload::$typies_parsing,['data-name'=>'spare_parts'] ) 
+                    <?php echo "?>\n";?>
+
                     <?php echo "<?php\n";?>
                     echo $form->field($model, 'fileori')->widget(FileInput::classname(), [
                         'options' => ['accept' => '.xls'],
@@ -70,7 +74,7 @@ $logId = Yii::$app->session->get($log);
                     <?php echo "?>\n";?>
                 </div>
             </div>
-            <div class="notifications" <?php if(empty($logId)){ echo 'style="display: none"';}?>>Please wait, while loading.... <img src="<?php echo \yii\helpers\Url::to('@web/img/loadingAnimation.gif');?>"></div>
+            <div class="notifications" <?php if(empty($logId)){ echo 'style="display: none"';}?>>Please wait, while loading.... <img src="<?php echo "<?php";?> echo \yii\helpers\Url::to('@web/img/loadingAnimation.gif');?>"></div>
             
             <?php echo "<?php\n";?>
             ActiveForm::end();
@@ -82,7 +86,8 @@ $logId = Yii::$app->session->get($log);
     <hr>
     <div class="row">
         <div class="col-md-10">
-            Format Sample : <a href="<?php echo "<?php";?> echo Yii::$app->urlManager->createUrl('<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>/sample');<?php echo "?>";?>"><?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>.xls</a>
+            Format Sample : <a id="sample-parsing" data-add="<?php echo "<?php";?> echo Yii::$app->urlManager->createUrl(['<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>/sample']); ?>" data-edit="<?php echo "<?php";?> echo Yii::$app->urlManager->createUrl(['<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>/sample','id'=>2]); ?>" href="<?php echo "<?php";?> echo Yii::$app->urlManager->createUrl(['<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>/sample']); ?>"><?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>_with_new_method.xls</a>
+
         </div>
 
     </div>
@@ -101,4 +106,18 @@ $this->registerJs('$(document).ready(function(){ $.ajax({
     });});');
  } 
  Yii::$app->session->set($log,NULL);
+ $this->registerJs('$("#logupload-type").on("change", function () {
+    var id = $(this).val();
+    var name = $(this).data("name");
+    var add = $("#sample-parsing").data("add");
+    var edit = $("#sample-parsing").data("edit");
+
+    if (id == 1) {
+        $("#sample-parsing").html(name + "_with_new_method.xls");
+        $("#sample-parsing").attr("href", add);
+    } else {
+        $("#sample-parsing").html(name + "_with_update_method.xls");
+        $("#sample-parsing").attr("href", edit);
+    }
+});');
 <?php echo "?> \n";?>
