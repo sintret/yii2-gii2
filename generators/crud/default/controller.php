@@ -189,11 +189,11 @@ $model = new <?= $modelClass ?>();
 if ($model-><?= $loadfile; ?>(Yii::$app->request->post()) && $model->save()) {
 Yii::$app->session->setFlash('success', 'Well done! successfully to save data!  ');
 return $this->redirect(['index']);
-} else {
+}
 return $this->render('create', [
 'model' => $model,
 ]);
-}
+
 }
 
 /**
@@ -210,11 +210,12 @@ $model = $this->findModel(<?= $actionParams ?>);
 if ($model-><?= $loadfile; ?>(Yii::$app->request->post()) && $model->save()) {
 Yii::$app->session->setFlash('success', 'Well done! successfully to update data!  ');
 return $this->redirect(['index']);
-} else {
+}
+
 return $this->render('update', [
 'model' => $model,
 ]);
-}
+
 }
 
 /**
